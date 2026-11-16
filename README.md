@@ -1,46 +1,20 @@
-# 📈 Stock Market Live
+# Stock price explorer
+React/Vite frontend for the [FastAPI backend](https://github.com/iamsaiteja/stock-market-analysis-api). Shows provider price, daily change, volume and market cap. Data may be delayed; this is not a streaming exchange feed.
 
-A real-time NSE/BSE stock market analysis web application built with React.js and FastAPI.
+## Run locally (Node.js 22+)
+```sh
+git clone https://github.com/iamsaiteja/stock-market-frontend.git
+cd stock-market-frontend
+npm ci
+cp .env.example .env.local
+npm run dev
+```
+On Windows copy `.env.example` to `.env.local` with your file manager. Set VITE_API_URL to your backend base URL without a trailing slash. Vite runs at http://localhost:5173.
 
-🔗 **Live Demo:** https://stock-market-frontend-nine.vercel.app
+The backend is a separate repository: clone it, install its requirements and run `uvicorn app.main:app --reload` from its root. This frontend has no backend/ or frontend/ subdirectory.
 
----
+## Checks
+`npm run lint` and `npm run build`. Manually check blank input, invalid symbol, unavailable backend and a valid response. Requests have a 20-second timeout; the button is disabled while loading and stale results are cleared.
 
-## 🚀 Features
-
-- 🔍 Search any NSE/BSE stock by symbol (RELIANCE, TCS, INFY...)
-- 📊 View live stock price, market cap, volume, day high/low
-- ⚡ Real-time data fetched from stock market API
-- 🌙 Clean dark-themed responsive UI
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React.js, CSS3 |
-| Backend | FastAPI (Python) |
-| API Communication | Axios |
-| Deployment | Vercel (Frontend), Render (Backend) |
-
----
-
-## ⚙️ Run Locally
-
-Backend:
-    cd backend
-    pip install -r requirements.txt
-    uvicorn main:app --reload
-
-Frontend:
-    cd frontend
-    npm install
-    npm run dev
-
----
-
-## 👨‍💻 Author
-
-**Saiteja Golla**  
-[GitHub](https://github.com/iamsaiteja) • [LinkedIn](https://linkedin.com/in/golla-saiteja)
+## Deployment
+Set VITE_API_URL in Vercel before building. Existing demo: https://stock-market-frontend-nine.vercel.app (availability is not checked by unit/build tests).

@@ -7,29 +7,32 @@ function App() {
   const [symbol, setSymbol] = useState("");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const getStock = async () => {
 
-    if (!symbol) {
-      alert("Enter stock symbol");
+    if (!symbol.trim()) {
+      setError("Enter a stock symbol.");
       return;
     }
 
     try {
 
       setLoading(true);
+      setError("");
+      setData(null);
 
       const response = await axios.get(
-        `https://stock-market-api-81xw.onrender.com/api/v1/stocks/${symbol}/price`
+        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/v1/stocks/${encodeURIComponent(symbol.trim())}/price`,
+        { timeout: 20000 }
       );
 
-      console.log(response.data);
 
       setData(response.data);
 
-    } catch  {
+    } catch (err) {
 
-      alert("Stock not found 😭");
+      setError(err.response?.status === 404 ? "Symbol not found. Check the exchange suffix." : "The data service is unavailable. Please retry.");
       setData(null);
 
     } finally {
@@ -59,7 +62,7 @@ function App() {
             </h1>
 
             <p className="subtitle">
-              NSE / BSE Live Analysis Platform
+              NSE / BSE Price Explorer
             </p>
 
           </div>
@@ -67,6 +70,7 @@ function App() {
           <div className="search-box">
 
             <input
+              aria-label="Stock symbol"
               type="text"
               placeholder="Enter NSE Symbol (RELIANCE, TCS, INFY)"
               value={symbol}
@@ -75,14 +79,16 @@ function App() {
               }
             />
 
-            <button onClick={getStock}>
+            <button onClick={getStock} disabled={loading}>
 
-              {loading ? "Loading..." : "Get Live Price"}
+              {loading ? "Loading..." : "Get Price"}
 
             </button>
 
           </div>
 
+          {error && <p role="alert">{error}</p>}
+          <p>Provider prices may be delayed. Timestamp shows retrieval time.</p>
           {data && (
 
             <div className="card">
